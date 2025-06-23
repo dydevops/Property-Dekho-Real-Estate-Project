@@ -1,0 +1,69 @@
+{% load static %}
+<!-- Footer
+================================================== -->
+<div id="footer" class="dark">
+	<!-- Main -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-3 col-sm-6">
+				<img class="footer-logo" src="{% static 'logo/propertydekhoge.png' %}" alt="">
+				<br>
+				 <p>{{genlt.content|truncatewords:25}}</p>
+			</div>
+
+			<div class="col-md-3 col-sm-6 ">
+				<h4>Quick Links</h4>
+				<ul class="footer-links">
+					<li><a href="{% url 'home' %}">Home</a></li>
+					<li><a href="{% url 'developer' %}">Developer</a></li>
+					<li><a href="{% url 'projects' %}">Projects</a></li>
+					<li><a href="{% url 'agents' %}">Agents</a></li>
+					<li> <a href="{% url 'privacypolicy' %}">Privacy policy</a></li>
+					<li><a href="{% url 'listings' %}">Listings</a></li>
+				</ul>
+				<div class="clearfix"></div>
+			</div>
+
+			<div class="col-md-3 col-sm-6 ">
+				<h4>Helpful Links</h4>
+				<ul class="footer-links">
+					<li><a href="{% url 'about' %}">About Us</a></li>
+					<li><a href="{% url 'login' %}">Login</a></li>
+					<li><a href="{% url 'register' %}">User Sign Up</a></li>
+					<li><a href="{% url 'agent_signup' %}">Agent Join</a></li>
+					<li><a href="{% url 'myAccount' %}">My Account</a></li>
+					<li> <a href="{% url 'contact' %}">Contact Us</a></li>
+				</ul>
+				<div class="clearfix"></div>
+			</div>
+			
+			<div class="col-md-3  col-sm-12">
+				<h4>Contact Us</h4>
+				<div class="text-widget">
+					<span>{{genlt.address|truncatewords:25}}</span> <br>
+					Phone: <span>{{genlt.phone_no1}}</span><br>
+					E-Mail:<span> <a href="#">{{genlt.email1}}</a> </span><br>
+				</div>
+
+				<ul class="social-icons margin-top-20">
+					<li><a class="facebook" href="{{genlt.facebook_link}}"><i class="icon-facebook"></i></a></li>
+					<li><a class="twitter" href="{{genlt.twitter_link}}"><i class="icon-twitter"></i></a></li>
+					<li><a class="linkedin" href="{{genlt.linkedin_link}}"><i class="icon-linkedin"></i></a></li>
+					<li><a class="instagram" href="{{genlt.instagram_link}}"><i class="icon-instagram"></i></a></li>
+				</ul>
+
+			</div>
+
+		</div>
+		
+		<!-- Copyright -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="copyrights">Copyright &copy; 2024 Property Dekhoge. All Rights Reserved.</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<!-- Footer / End -->

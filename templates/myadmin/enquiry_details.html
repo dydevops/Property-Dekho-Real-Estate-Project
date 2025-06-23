@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %} |  Enquiry Details{% endblock %}
+{% load static %}
+{% block content %}
+{% load filters %}
+{% block css %}
+<style>
+	.requirement {
+        float: left;
+        width: 100%;
+        display: inline-block;
+        background-color: #f1f1f1;
+        padding: 10px;
+        color: black;
+        font-weight: 400;
+    }
+</style>
+{% endblock css %}
+<!-- Titlebar
+================================================== -->
+<div id="titlebar">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+				<h2>Enquiry Details</h2>
+				
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs">
+					<ul>
+						<li><a href="#">Home</a></li>
+						<li>Enquiry Details</li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Content
+================================================== -->
+<div class="container">
+	<div class="row">
+		<!-- Widget -->
+		<div class="col-md-4">
+			{% include 'myadmin/sidebarleft.html' %}
+		</div>
+		<div class="col-md-8">
+		<!-- Pagination Container -->
+          <!-- Alerts -->
+           {% include 'includes/alerts.html' %}
+		<div class="row fs-listings">
+      <!-- Property Description -->
+       <div class="col-lg-12 col-md-12 sp-content">
+       <div class="property-description">
+         <!-- Features -->
+         <h3 >Customer Details</h3>
+         <ul class="listing-details">
+            <li><i class="fa fa-user" style="color:red"></i> Name: {{ enquiry.full_name }}</li>
+            <li><i class="fa fa-phone" style="color:red"></i> Phone No: {{ enquiry.phone_no }}</li>
+            <li><i class="fa fa-envelope" style="color:red"></i> Email: {{ enquiry.email }}</li>
+            <li><i class="fa fa-map" style="color:red"></i> City: {{ enquiry.city}}</li>
+        </ul>
+        <h3>Message</h3>
+        <div class="requirement">
+            <p>{{ enquiry.requirement}}</p>
+        </div >
+
+         <ul class="property-features checkboxes margin-top-0">
+             {% for amenities in listing.amenities_set.all %}
+             <li>{{amenities.name}}</li>
+             {% endfor %}
+         </ul>
+        <!-- Details -->
+        <h3> Property Details</h3>
+        <div class="blog-post">
+        <h4><a href="{{ enquiry.listing.get_url }}" target="_blank">{{ enquiry.listing }}</a></h4>
+        <p class="listing-address popup-gmaps">
+            <i class="fa fa-map-marker" style="font-size:20px;color:red"></i>
+            {{ enquiry.listing.locality}}, {{ enquiry.listing.city }}, {{ enquiry.listing.state }}, {{ enquiry.listing.zipcode }}
+        </p>   
+            <a href="{{ enquiry.listing.get_url }}" class="listing-img-container">
+                <div class="listing-badges">
+                    <span class="featured">Sale</span>
+                    <span>For Rent</span>
+                </div>
+                <div class="listing-img-content">
+                    <span class="listing-price">₹{{ enquiry.listing.price |format_price |intcomma }}</span>
+                </div>
+                <img src="{{ enquiry.listing.photo_main.url }}" alt="">
+            </a>
+        </div>   
+        <ul class="property-features margin-top-0 margin-bottom-45">
+            <li>Asking Price: <span>₹{{ enquiry.listing.price | intcomma }}</span></li>
+            <li>Configuration: <span>{{ enquiry.listing.configuration }}</span></li>
+            <li>Possession: <span>{{enquiry.listing.possession }}</span></li>
+            <li>Bedrooms: <span>{{ enquiry.listing.bedrooms }}</span></li>
+            <li>Bathrooms: <span>{{ enquiry.listing.bathrooms }}</span></li>
+            <li>Garage: <span>{{ enquiry.listing.garage }}</span></li>
+            <li>Square Feet: <span>{{enquiry.listing.sqft }}</span></li>
+            <li>Lot Size: <span>{{ enquiry.listing.lot_size }} Acres</span></li>
+            <li>Floor: <span>{{ enquiry.listing.floors }}</span></li>
+            <li>Sale Type: <span>{{ enquiry.listing.sale_type }}</span></li>
+            <li>Agent: <span>{{ enquiry.listing.realtor }}</span></li>
+            <li>City: <span>{{ enquiry.listing.city }}</span></li>
+            <li>Date: <span>{{ enquiry.listing.list_date|date:'d F, Y' }}</span></li>
+        </ul>
+    </div>
+</div>
+<div class="clearfix"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

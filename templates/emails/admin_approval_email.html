@@ -1,0 +1,13 @@
+{% autoescape off %}
+
+Hi {{user.first_name}},
+
+{% if is_approved %}
+Congratulations! Your Property Dekhoge has been approved by our admin team. --Property Dekhoge
+{% else %}
+We're sorry! You are not eligible for publishing your property list on our portal. For more details, please contact support@propertydekhoge.com. --Property Dekhoge
+{% endif %}
+
+
+
+{% endautoescape %}

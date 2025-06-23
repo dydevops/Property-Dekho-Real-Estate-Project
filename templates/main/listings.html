@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %} | Listings {% endblock %}
+{% load static %}
+{% block content %}
+{% load filters %}
+<!-- Titlebar
+================================================== -->
+{% if 'search' in request.path %}
+<section class="search margin-bottom-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+    
+                <!-- Title -->
+                <h3 class="search-title">Search</h3>
+    
+                <!-- Form -->
+                <div class="main-search-box no-shadow">
+    
+                <form action="{% url 'search' %}">
+                  <!-- Row With Forms -->
+                    <div class="row with-forms">
+    
+                        <!-- Min Price -->
+                        <div class="col-md-3">
+                            <!-- Select Input -->
+                            <select name="possession" data-placeholder="Possession Status" class="form-control chosen-select-no-single" >
+                                    <option selected="true" disabled="disabled">Possession Status</option>	
+                                    {% for possession in possessions %}
+                                    <option value="{{possession.name}}" 
+                                    {% if possession.name == values.possession %}
+                                      selected
+                                    {% endif %}
+                                    >{{possession.name}}</option>
+                                  {% endfor %}
+                            </select>
+                            <!-- Select Input / End -->
+                        </div>
+    
+                        <!-- Max Price -->
+                        <div class="col-md-3">
+                            <!-- Select Input -->
+                            <select name="price" data-placeholder="Possession Status" class="form-control chosen-select-no-single" >
+                                <option selected="true" disabled="disabled">Max Price (All)</option>
+                                {% for key,value in price_choices.items %}
+                                    <option value="{{ key }}"
+                                    {% if key == values.price %}
+                                      selected
+                                    {% endif %}
+                                    >{{ value }}</option>
+                                  {% endfor %}
+                            </select>
+                            <!-- Select Input / End -->
+                        </div>
+    
+    
+                        <!-- Min Price -->
+                        <div class="col-md-3">
+                            
+                            <select name="configuration" data-placeholder="Possession Status" class="form-control chosen-select-no-single" >
+                                <option selected="true" disabled="disabled">BHK Type</option>
+                                {% for configuration in configurations %}
+                                <option value="{{configuration.name}}">{{configuration.name}}</option>
+                                {% endfor %}
+                            </select>
+    
+                        </div>
+    
+    
+                        <!-- Max Price -->
+                        <div class="col-md-3">
+                            <select name="bedrooms" data-placeholder="Bedrooms" class="form-control chosen-select-no-single" >
+                                <option selected="true" disabled="disabled">Bedrooms (Any)</option>
+                               {% for key,value in bedroom_choices.items %}
+                                   <option value="{{ key }}"
+                                   {% if key == values.bedrooms %}
+                                     selected
+                                   {% endif %}
+                                   >{{ value }}</option>
+                                 {% endfor %}
+                            </select>  
+                        </div>
+    
+                    </div>
+                    <!-- Row With Forms / End -->
+                     <!-- Row With Forms -->
+                     <div class="row with-forms">
+    
+                        <!-- Status -->
+                        <div class="col-md-3">
+                            <select name="city" data-placeholder="Any Status" class="form-control chosen-select-no-single" >
+                                <option selected="true" disabled="disabled">Locations (All)</option>
+                                {% for city in cities %}
+                                <option value="{{ city.city_name}}" 
+                                {% if city.city_name == values.city %}
+                                  selected
+                                {% endif %}
+                                >{{city.city_name}}</option>
+                              {% endfor %}
+                            </select>
+                        </div>
+    
+                        <!-- Property Type -->
+                        <div class="col-md-3">
+                            <select name="category" data-placeholder="Any Type" class="form-control chosen-select-no-single" >
+                                <option selected="true" disabled="disabled">Property Type</option>
+                                {% for category in categories %}
+                                <option value="{{category.category_name}}" 
+                                {% if category.category_name == values.category %}
+                                  selected
+                                {% endif %}
+                                >{{category.category_name}}</option>
+                              {% endfor %}
+                            </select>
+                        </div>
+    
+                        <!-- Main Search Input -->
+                        <div class="col-md-6">
+                            <div class="main-search-input">
+                                <input type="text" name="keywords" class="form-control" placeholder="Keyword (Pool, Garage, etc)" value="{{ values.keywords }}">
+                                <button class="button" type="submit">Search</button>
+                            </div>
+                        </div>
+    
+                    </div>
+                    <!-- Row With Forms / End -->
+                    </form>
+    
+                </div>
+                <!-- Box / End -->
+            </div>
+        </div>
+    </div>
+</section>
+
+{% else %}
+{% if banner.bg_banner %}
+<div class="parallax titlebar"
+	data-background="{{banner.bg_banner.url}}"
+	data-color="#333333"
+	data-color-opacity="0.7"
+	data-img-width="800"
+	data-img-height="505">
+{% else %}
+<div class="parallax titlebar"
+	data-background="{% static 'images/listings-parallax.jpg' %}"
+	data-color="#333333"
+	data-color-opacity="0.7"
+	data-img-width="800"
+	data-img-height="505">	
+{% endif %}
+	<div id="titlebar">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<h2>Listings</h2>
+					<span>Browse Our Properties</span>
+					
+					<!-- Breadcrumbs -->
+					<nav id="breadcrumbs">
+						<ul>
+							<li><a href="{% url 'home' %}">Home</a></li>
+							<li>Listings</li>
+						</ul>
+					</nav>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endif %}
+
+<!-- Content
+================================================== -->
+<div class="container">
+	<div class="row sticky-wrapper">
+
+		<div class="col-md-9">
+
+			<!-- Main Search Input -->
+			{% if 'listings' in request.path %}
+			<form action="{% url 'search' %}">
+			<div class="main-search-input margin-bottom-35">
+				<input type="text" name="keywords" class="form-control" placeholder="Enter address e.g. street, city and state or zip">	
+				<button type="submit" class="button">Search</button>
+			</div>
+		    </form>
+			{% endif %}
+			<!-- Sorting / Layout Switcher -->
+			<div class="row margin-bottom-15">
+
+				<div class="col-md-6">
+					<!-- Sort by -->
+					<div class="sort-by">
+						{% if 'search' in request.path %}
+						<label>Search Result:</label>
+						{% else %}
+						<label>Browse Our Properties:</label>
+						{% endif %}
+
+						{% comment %} <div class="sort-by-select">
+							<select data-placeholder="Default order" class="form-control chosen-select-no-single" >
+								<option>Default Order</option>	
+								<option>Price Low to High</option>
+								<option>Price High to Low</option>
+								<option>Newest Properties</option>
+								<option>Oldest Properties</option>
+							</select>
+						</div> {% endcomment %}
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<!-- Layout Switcher -->
+					<div class="layout-switcher">
+						<a href="#" class="grid"><i class="fa fa-th-large"></i></a>
+						<a href="#" class="list"><i class="fa fa-th-list"></i></a>
+					</div>
+				</div>
+			</div>
+
+			
+			<!-- Listings -->
+			<div class="listings-container grid-layout">
+                {% if listings %}
+                {% for listing in listings %}
+				<!-- Listing Item -->
+				<div class="listing-item">
+					<a href="{{ listing.get_url }}" class="listing-img-container">
+						<div class="listing-badges">
+							{% if listing.listing_type == 'Buy' %}
+      						<span class="featured">For Sale</span>
+      						{% elif listing.listing_type == 'Rent' %}
+      						<span class="featured">For Rent</span>
+      						{% else %}
+      						{% endif %}
+				             <span>{{listing.configuration}} Flat</span>
+						</div>
+
+						<div class="listing-img-content">
+							<span class="listing-price"> ₹{{ listing.price |format_price |intcomma }} | {{ listing.sqft }} Sqft</span>
+						</div>
+						
+						<img src="{{ listing.photo_main.url }}" alt="">
+						{% comment %} <img src="{% static 'images/' %}listing-02.jpg" alt=""> {% endcomment %}
+
+					</a>
+					
+					<div class="listing-content">
+
+						<div class="listing-title">
+							<h4><a href="{{ listing.get_url }}">{{listing.configuration}} Flat, {{ listing.title|truncatewords:10 }}, {{ listing.locality}}</a></h4>
+							<p class="listing-address popup-gmaps">
+								<i class="fa fa-map-marker" style="font-size:20px;color:red"></i>
+								{{ listing.city }}, {{ listing.state }}, {{ listing.zipcode }}
+							</p>
+
+							<a href="{{ listing.get_url }}" class="details button border">Details</a>
+						</div>
+
+						<ul class="listing-details">
+							<li><i class="fa fa-th-large" style="color:red"></i> Sqft: {{ listing.sqft }}</li>
+							<li><i class="fa fa-car" style="color:red"></i> Parking: {{ listing.parking }}</li>
+							<li><i class="fa fa-bed" style="color:red"></i> Bedrooms: {{ listing.bedrooms }}</li>
+							<li><i class="fa fa-bath" style="color:red"></i> Bathrooms: {{ listing.bathrooms }}</li>
+						</ul>
+
+						<div class="listing-footer">
+							<a href="#"><i class="fa fa-user" style="color:red"></i> {{ listing.realtor }}</a>
+							<p><i class="fa fa-calendar-o" style="color:red"></i> {{ listing.created_on |naturaltime }}</p>
+						</div>
+
+					</div>
+
+				</div>
+                {% endfor %}
+                {% else %}
+                  <div class="col-md-12">
+                    <p>No Listings Available</p>
+                  </div>
+                {% endif %}
+				<!-- Listing Item / End -->
+			</div>
+			<!-- Listings Container / End -->
+
+			<div class="col-md-12">
+			<!-- Pagination -->
+			{% comment %} <div class="pagination-container margin-top-20">
+				<nav class="pagination">
+					<ul>
+						<li><a href="#" class="current-page">1</a></li>
+						<li><a href="#">2</a></li>
+						<li><a href="#">3</a></li>
+						<li class="blank">...</li>
+						<li><a href="#">22</a></li>
+					</ul>
+				</nav>
+
+				<nav class="pagination-next-prev">
+					<ul>
+						<li><a href="#" class="prev">Previous</a></li>
+						<li><a href="#" class="next">Next</a></li>
+					</ul>
+				</nav>
+			</div> {% endcomment %}
+			<!-- Pagination / End -->
+			  <!-- Pagination -->
+			  <div class="pagination-container margin-top-20">
+				<nav class="pagination margin-left-20 margin-right-20">
+					<ul>
+						{% if listings.has_previous %}
+							<li><a href="?page=1">1</a></li>
+						{% endif %}
+						{% if listings.has_other_pages %}
+							{% if listings.number|add:'-3' > 1 %}
+								<li class="blank">...</li>
+							{% endif %}
+							{% for num in listings.paginator.page_range %}
+								{% if listings.number == num %}
+									<li><a href="#" class="current-page">{{ num }}</a></li>
+								{% elif num > listings.number|add:'-3' and num < listings.number|add:'3' %}
+									<li><a href="?page={{ num }}">{{ num }}</a></li>
+								{% endif %}
+							{% endfor %}
+							{% if listings.number|add:'3' < listings.paginator.num_pages %}
+								<li class="blank">...</li>
+							{% endif %}
+						{% endif %}
+						{% if listings.has_next %}
+							<li><a href="?page={{ listings.paginator.num_pages }}">{{ listings.paginator.num_pages }}</a></li>
+						{% endif %}
+					</ul>
+				</nav>
+		
+				<nav class="pagination-next-prev">
+					<ul>
+						{% if listings.has_previous %}
+							<li><a href="?page={{ listings.previous_page_number }}" class="prev">Previous</a></li>
+						{% endif %}
+						{% if listings.has_next %}
+							<li><a href="?page={{ listings.next_page_number }}" class="next">Next</a></li>
+						{% endif %}
+					</ul>
+				</nav>
+			</div>
+			<!-- Pagination / End -->
+		  </div>
+
+		</div>
+
+
+		<!-- Sidebar
+		================================================== -->
+		<div class="col-md-3">
+			<div class="sidebar sticky right">
+
+				<!-- Widget -->
+				<div class="widget margin-bottom-40">
+					<h3 class="margin-top-0 margin-bottom-35">Find New Home</h3>
+					<form action="{% url 'search' %}">
+					<!-- Row -->
+					<div class="row with-forms">
+						<!-- Status -->
+						<div class="col-md-12">
+							<select name="configuration" data-placeholder="BHK Type" class="form-control chosen-select-no-single" >
+								<option selected="true" disabled="disabled">BHK Type</option>
+								{% for configuration in configurations %}
+								  <option value="{{configuration.name}}">{{configuration.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<!-- Row / End -->
+
+
+					<!-- Row -->
+					<div class="row with-forms">
+						<!-- Type -->
+						<div class="col-md-12">
+							<select name="category" data-placeholder="Property Type" class="form-control chosen-select-no-single" >
+								<option selected="true" disabled="disabled">Property Type</option>
+                                {% for category in categories %}
+                                  <option value="{{ category.category_name}}">{{ category.category_name}}</option>
+                                {% endfor %}
+							</select>
+						</div>
+					</div>
+					<!-- Row / End -->
+					<!-- Row -->
+					<div class="row with-forms">
+						<!-- States -->
+						<div class="col-md-12">
+							<select name="price" data-placeholder="All States" class="form-control chosen-select-no-single" >
+								<option selected="true" disabled="disabled">Budget (Any)</option>
+                                 {% for key,value in price_choices.items %}
+                                   <option value="{{ key }}">{{ value}}</option>
+                                 {% endfor %}
+							</select>
+						</div>
+					</div>
+					<!-- Row / End -->
+
+
+					<!-- Row -->
+					<div class="row with-forms">
+						<!-- Cities -->
+						<div class="col-md-12">
+							<select name="city" data-placeholder="All Cities" class="form-control chosen-select" >
+								{% comment %} <option>All Cities</option> {% endcomment %}
+								<option selected="true" disabled="disabled">All Cities</option>	
+								{% for city in cities %}
+								<option value="{{ city.city_name}}">{{ city.city_name}}</option>
+								{% endfor %}
+								<option>New York</option>
+								<option>Los Angeles</option>
+								<option>Chicago</option>
+								<option>Brooklyn</option>
+								<option>Queens</option>
+								<option>Houston</option>
+								<option>Manhattan</option>
+								<option>Philadelphia</option>
+								<option>Phoenix</option>
+								<option>San Antonio</option>
+								<option>Bronx</option>
+								<option>San Diego</option>
+								<option>Dallas</option>
+								<option>San Jose</option>
+							</select>
+						</div>
+					</div>
+					<!-- Row / End -->
+					<br>
+					<button type="submit" class="button fullwidth margin-top-30">Search</button>
+                     </form>
+
+				</div>
+				<!-- Widget / End -->
+
+			</div>
+		</div>
+		<!-- Sidebar / End -->
+	</div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'admin/base_site.html' %}
+<title>Property Dekhoge</title>
+{% load static %}
+
+{% block branding %}
+  <h1 id="head">
+    {% if genlt.logo %}
+    <a href="/admin"><img src="{{genlt.logo.url}}" alt="" class="brand_img" height="30" width="100"></a>
+    {% else %}
+    <a href="/admin"><img src="{% static 'logo/propertydekhoge.png' %}" alt="" class="brand_img" height="30" width="200"></a>
+    {% endif %}
+  </h1>
+{% endblock %}
+
+ {% block extrastyle %}
+  <link rel="stylesheet" href="{% static 'admin/admin.css' %}">
+  <link rel="shortcut icon" href="{% static 'logo/favicon.png' %}" />
+{% endblock %}

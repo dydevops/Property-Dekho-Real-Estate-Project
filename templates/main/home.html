@@ -1,0 +1,371 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %} - Home {% endblock %}
+{% load static %}
+{% block content %}
+{% load filters %}
+<!-- Banner
+================================================== -->
+{% if hero.banner %}
+<div class="parallax" data-background="{{ hero.banner.url }}" data-color="#36383e" data-color-opacity="0.45" data-img-width="2500" data-img-height="1600">
+{% else %}
+<div class="parallax" data-background="{% static 'images/flip-banner-bg.jpg' %}" data-color="#36383e" data-color-opacity="0.45" data-img-width="2500" data-img-height="1600">	
+{% endif %}
+	<div class="parallax-content">
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<!-- Main Search Container -->
+					<div class="main-search-container">
+						<h2>{{ hero.heading_2}}</h2>
+						
+						<!-- Main Search -->
+						<form action="{% url 'search' %}" class="main-search-form">
+							
+							<!-- Type -->
+							<div class="search-type">
+								<label class="active"><input class="first-tab" name="tab" type="radio" value="Buy" {% if request.GET.tab == 'Buy' %}checked{% endif %}>For Buy</label>
+								<label><input name="tab" type="radio" value="Rent" {% if request.GET.tab == 'Rent' %}checked{% endif %}>For Rent</label>
+								<div class="search-type-arrow"></div>
+							</div>
+
+							
+							<!-- Box -->
+							<div class="main-search-box">
+								
+								<!-- Main Search Input -->
+								<!-- Row -->
+								<div class="row with-forms">
+
+									<!-- Property Type -->
+									<div class="col-md-4">
+										<select name="city" data-placeholder="Locations" class="form-control chosen-select">
+											<option selected="true" disabled="disabled">Locations</option>	
+											{% for city in cities %}
+											<option value="{{ city.city_name}}">{{ city.city_name}}</option>
+										    {% endfor %}
+											<option>New York</option>
+             								<option>Los Angeles</option>
+             								<option>Chicago</option>
+             								<option>Brooklyn</option>
+             								<option>Queens</option>
+             								<option>Houston</option>
+             								<option>Manhattan</option>
+             								<option>Philadelphia</option>
+             								<option>Phoenix</option>
+             								<option>San Antonio</option>
+             								<option>Bronx</option>
+             								<option>San Diego</option>
+             								<option>Dallas</option>
+             								<option>San Jose</option>
+										</select>
+									</div>
+									<!-- Min Price -->
+									<div class="col-md-4">
+										
+										<!-- Select Input -->
+										<select name="category" data-placeholder="Property Type" class="form-control chosen-select-no-single" >
+											<option selected="true" disabled="disabled">Property Type</option>
+                                             {% for category in categories %}
+                                               <option value="{{ category.category_name}}">{{ category.category_name}}</option>
+                                             {% endfor %}
+										</select>
+										<!-- Select Input / End -->
+
+									</div>
+									<!-- Max Price -->
+									<div class="form-group col-md-4">
+										
+										<!-- Select Input -->
+										<select name="price" data-placeholder="Property Type" class="form-control chosen-select-no-single">
+											<option selected="true" disabled="disabled">Budget (Any)</option>
+                                            {% for key,value in price_choices.items %}
+                                              <option value="{{ key }}">{{ value}}</option>
+                                            {% endfor %}
+										</select>
+										<!-- Select Input / End -->
+
+									</div>
+
+								</div>
+								<!-- Row / End -->
+								<!-- More Search Options / End -->
+								<div class="main-search-input larger-input">
+									<input type="text" name="keywords" class="form-control" placeholder="Keyword (Pool, Garage, etc)">
+									<button type="submit" class="button">Search</button>
+								</div>
+
+							</div>
+							<!-- Box / End -->
+
+						</form>
+						<!-- Main Search -->
+
+					</div>
+					<!-- Main Search Container / End -->
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+<!-- Content
+================================================== -->
+<div class="container">
+	<div class="row">
+	
+		<div class="col-md-12">
+			<h3 class="headline margin-bottom-25 margin-top-65">Newly Added</h3>
+		</div>
+		
+		<!-- Carousel -->
+		<div class="col-md-12">
+			<div class="carousel">
+				<!-- Listing Item -->
+				{% for listing in listings %}
+				<div class="carousel-item">
+					
+					<div class="listing-item">
+
+						<a href="{{ listing.get_url }}" class="listing-img-container">
+
+							<div class="listing-badges">
+								<span class="featured">{{listing.listing_type}}</span>
+								<span>{{listing.configuration}} Flat</span>
+							</div>
+
+							<div class="listing-img-content">
+								<span class="listing-price">₹{{ listing.price|format_price| intcomma }} | {{ listing.sqft }} Sqft</span>
+							</div>
+                            {% if listing.photo_main %}
+							<img src="{{ listing.photo_main.url }}" alt="">
+							{% else %}
+							<img src="{% static 'images/listing-01.jpg' %}" alt="">
+							{% endif %}
+						</a>
+						
+						<div class="listing-content">
+
+							<div class="listing-title">
+								<h4><a href="{{ listing.get_url }}">{{listing.configuration}} Flat, {{ listing.title|truncatewords:10 }}, {{ listing.locality}}</a></h4>
+								<i class="fa fa-map-marker" style="font-size:20px;color:red"></i>
+								{{ listing.locality}}, {{ listing.city }}
+							</div>
+
+							<ul class="listing-features">
+								<li>Area <span>{{ listing.sqft }} Sqft</span></li>
+								<li>Bedrooms <span>{{ listing.bedrooms }}</span></li>
+								<li>Bathrooms <span>{{ listing.bathrooms }}</span></li>
+							</ul>
+
+							<div class="listing-footer">
+								<p><i class="fa fa-calendar-o"></i>{{ listing.created_on |naturaltime }}</p>
+							</div>
+
+						</div>
+						<!-- Listing Item / End -->
+
+					</div>
+
+				</div>
+				<!-- Listing Item / End -->
+               {% endfor %}
+			</div>
+		</div>
+		<!-- Carousel / End -->
+
+	</div>
+</div>
+<!-- Fullwidth Section -->
+<section class="fullwidth margin-top-105" data-background-color="#f7f7f7">
+
+	<!-- Box Headline -->
+	<h3 class="headline-box">What are you looking for?</h3>
+	
+	<!-- Content -->
+	<div class="container">
+		<div class="row">
+			{% for type in propertytype %}
+			<div class="col-md-3 col-sm-6">
+				<!-- Icon Box -->
+				<div class="icon-box-1">
+
+					<div class="icon-container">
+						{% if  type.image %}
+						<img src="{{ type.image.url}}" alt="">
+                         {% else %}
+						<img src="{% static 'icons/residential.jpg' %}" alt="">
+						{% endif %}
+					</div>
+
+					<h3>{{ type.category_name }}</h3>
+					<p>{{ type.description|truncatewords:15|safe }}</p>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</section>
+<!-- Fullwidth Section / End -->
+
+
+<!-- Container -->
+<div class="container">
+	<div class="row">
+
+		<div class="col-md-12">
+			<h3 class="headline centered margin-bottom-35 margin-top-10">Most Popular Places <span>Properties In Most Popular Places</span></h3>
+		</div>
+		{% for city in mycities %}
+		<div class="col-md-4">
+			<!-- Image Box -->
+			{% if city.photo %}
+			<a href="{{ city.get_url }}" class="img-box" data-background-image="{{city.photo.url}}">
+			{% else %}
+			<a href="{{ city.get_url }}" class="img-box" data-background-image="{% static 'images/popular-location-01.jpg' %}">
+			{% endif %}
+				<!-- Badge -->
+				<div class="listing-badges">
+					<span class="featured">Featured</span>
+				</div>
+
+				<div class="img-box-content visible">
+					<h4>{{city.city_name}}</h4>
+					<span>{{city.listing_set.all.count}} Properties</span>
+				</div>
+			</a>
+		</div>
+		{% endfor %}	
+			
+	</div>
+</div>
+<!-- Container / End -->
+
+
+<!-- Fullwidth Section -->
+<section class="fullwidth margin-top-95 margin-bottom-0">
+	<!-- Box Headline -->
+	<h3 class="headline-box">Latest Properties for Sale</h3>
+<div class="container">
+<div class="row fullwidth-layout">
+<!-- Listings -->
+<div class="container">
+	{% if mylistings %}
+	{% for listing in mylistings %}
+	<!-- Listing Item -->
+	<div class="col-md-4">
+		<div class="blog-post">
+		<a href="{{ listing.get_url }}" class="listing-img-container">
+			<div class="listing-badges">
+				<span class="featured">{{listing.listing_type}}</span>
+				<span>{{listing.configuration}} Flat</span>
+			</div>
+
+			<div class="listing-img-content">
+				<span class="listing-price">₹{{ listing.price |format_price |intcomma }} | {{ listing.sqft }} Sqft</span>
+			</div>
+			{% if listing.photo_main %}
+			<img src="{{ listing.photo_main.url }}" alt="">
+			{% else %}
+			<img src="{% static 'images/listing-02.jpg' %}" alt="">
+			{% endif %}
+		</a>
+		
+		<div class="listing-content">
+
+			<div class="listing-title">
+				<h4><a href="{{ listing.get_url }}">{{listing.configuration}} Flat, {{ listing.title|truncatewords:10 }}, {{ listing.locality}}</a></h4>
+				<p class="listing-address popup-gmaps">
+					<i class="fa fa-map-marker" style="font-size:20px;color:red"></i>
+					{{ listing.city }}, {{ listing.state }}, {{ listing.zipcode }}
+				</p>
+
+				<a href="{{ listing.get_url }}" class="details button border">Details</a>
+			</div>
+
+			<ul class="listing-details">
+				<li><i class="fa fa-th-large" style="color:red"></i> Sqft: {{ listing.sqft }}</li>
+				<li><i class="fa fa-car" style="color:red"></i> Parking: {{ listing.parking }}</li>
+				<li><i class="fa fa-bed" style="color:red"></i> Bedrooms: {{ listing.bedrooms }}</li>
+				<li><i class="fa fa-bath" style="color:red"></i> Bathrooms: {{ listing.bathrooms }}</li>
+			</ul>
+
+			<div class="listing-footer">
+				<a href="#"><i class="fa fa-user" style="color:red"></i> {{ listing.realtor }}</a>
+				<p><i class="fa fa-calendar-o" style="color:red"></i> {{ listing.created_on |naturaltime }}</p>
+			</div>
+
+		</div>
+
+	</div>
+  </div>
+	{% endfor %}
+	{% else %}
+	  <div class="col-md-12">
+		<p>No Listings Available</p>
+	  </div>
+	{% endif %}
+	<!-- Listing Item / End -->
+	{% comment %} <br>
+	<a href="{% url 'listings' %}" class="button btn btn-secondary text-white btn-lg text-center ">View All Listings</a> {% endcomment %}
+</div>
+
+
+
+
+
+	
+
+			
+
+			{% comment %} <div class="col-md-4">
+
+				<!-- Blog Post -->
+				<div class="blog-post">
+					
+					<!-- Img -->
+					<a href="#" class="post-img">
+						<img src="{% static 'images/' %}blog-post-03.jpg" alt="">
+					</a>
+					
+					<!-- Content -->
+					<div class="post-content">
+						<h3><a href="#">What to Do a Year Before Buying Apartment</a></h3>
+						<p>Nam nisl lacus, dignissim ac tristique ut, scelerisque eu massa. Vestibulum ligula nunc, rutrum in malesuada vitae. </p>
+
+						<a href="#" class="read-more">Read More <i class="fa fa-angle-right"></i></a>
+					</div>
+
+				</div>
+				<!-- Blog Post / End -->
+
+			</div> {% endcomment %}
+
+		</div>
+	</div>
+
+	
+</section>
+<!-- Fullwidth Section / End -->
+
+
+<!-- Flip banner -->
+<a href="{% url 'listings' %}" class="flip-banner parallax" data-background="{% static 'images/flip-banner-bg.jpg' %}" data-color="#274abb" data-color-opacity="0.9" data-img-width="2500" data-img-height="1600">
+	<div class="flip-banner-content">
+		<h2 class="flip-visible">We help people and homes find each other</h2>
+		<h2 class="flip-hidden">Browse Properties <i class="sl sl-icon-arrow-right"></i></h2>
+	</div>
+</a>
+<!-- Flip banner / End -->
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %} |  Account Login{% endblock %}
+{% load static %}
+{% block content %}
+<!-- Titlebar
+================================================== -->
+<div id="titlebar">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+				<h2> Account Login</h2>
+				
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs">
+					<ul>
+						<li><a href="#">Home</a></li>
+						<li> Account Login</li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Container -->
+<div class="container">
+
+	<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+	<!--Tab -->
+	<div class="my-account style-1 margin-top-5 margin-bottom-40">
+    <div class="card">
+      <div class="card-header text-white">
+        <h2>Login</h2>
+      </div>
+      <div class="card-body">
+        <!-- Alerts -->
+        {% include 'includes/alerts.html' %}
+        <form action="{% url 'login' %}" method="POST">
+          {% csrf_token %}
+        <div class="form-group">
+          <label for="username">Email address</label>
+          <input type="email"  name="email" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password2">Password</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+        <p class="form-row">
+          <input type="submit" class="button border fw margin-top-10" value="Login">
+        </p>
+        <p class="lost_password">
+          <a href="{% url 'forgot_password' %}" >Lost Your Password?</a>
+        </p>
+      </form>
+      </div>
+    </div>
+	</div>
+	</div>
+	</div>
+</div>
+{% endblock %}

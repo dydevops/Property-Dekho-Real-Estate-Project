@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %} | Vendor Profile {% endblock %}
+{% load static %}
+{% block content %}
+<!-- Titlebar
+================================================== -->
+<div id="titlebar">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+				<h2> Vendor Profile</h2>
+				
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs">
+					<ul>
+						<li><a href="#">Home</a></li>
+						<li>Vendor Profile</li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+  <!-- Alerts -->
+
+<!-- Content
+================================================== -->
+<div class="container">
+	<div class="row">
+
+
+		<!-- Widget -->
+		<div class="col-md-4">
+            {% include 'agents/sidebarleft.html' %}
+		</div>
+
+		<div class="col-md-8">
+            <form  action="{% url 'vprofile' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %} 
+			<div class="row">
+
+
+				<div class="col-md-8 my-profile">
+					<div class="row">	
+					<h4 class="margin-top-0 margin-bottom-30">My Vendor Account</h4>
+					{% include 'includes/alerts.html' %}
+					<div class="col-md-12">
+					 <label>Vendor Name</label>
+					  {{vendor_form.name}}
+					</div>
+					<div class="col-md-12">
+						<label>Phone No.</label>
+						{{vendor_form.phone}}
+					</div>
+                    <div class="col-md-12">
+						<label>Email</label>
+						{{vendor_form.email}}
+					</div>
+                    </div>
+					<button type="submit" class="button margin-top-20 margin-bottom-20">Save Changes</button>
+				</div>
+			</div>
+			{{ vendor_form.media}}
+        </form>
+		</div>
+
+	</div>
+</div>
+{% endblock %}  

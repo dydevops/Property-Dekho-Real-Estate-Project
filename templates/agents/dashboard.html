@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %} |  User Dashboard {% endblock %}
+{% load static %}
+{% block content %}
+<!-- Titlebar
+================================================== -->
+<div id="titlebar">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+				<h2>Dashboard</h2>
+				
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs">
+					<ul>
+						<li><a href="#">Home</a></li>
+						<li>Dashboard</li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Content
+================================================== -->
+<div class="container">
+	<div class="row">
+
+
+		<!-- Widget -->
+		<div class="col-md-4">
+			{% include 'agents/sidebarleft.html' %}
+		</div>
+
+		<div class="col-md-8">
+			  <!-- Alerts -->
+               {% include 'includes/alerts.html' %}
+			<table class="manage-table responsive-table">
+
+				<tr>
+					<th><i class="fa fa-file-text"></i> Property</th>
+					<th class="expire-date"><i class="fa fa-calendar"></i> Date</th>
+					<th>Action</th>
+				</tr>
+
+				<!-- Item #1 -->
+                {% for enq in listingenquiry %}
+				<tr>
+					<td class="title-container">
+                        {% if enq.listing.photo_main %}
+						<img src="{{ enq.listing.photo_main.url }}" alt="">
+                        {% else %}
+                        <img src="{% static 'images/listing-02.jpg' %}" alt="">
+                        {% endif %}
+						<div class="title">
+							<h4><a href="{{ enq.listing.get_url }}" target="_blank">{{ enq.listing }}</a></h4>
+							{% comment %} <span>{{ enq.city}}</span> {% endcomment %}
+							<span class="table-property-price">{{ enq.full_name }}, {{ enq.phone_no }}</span>
+						</div>
+					</td>
+					<td class="expire-date">{{enq.created_on|date:'d F, Y'}}</td>
+					<td class="action">
+						<a href="{% url 'enquiry_vdetail' enq.id %}" target="_blank"><i class="fa fa-eye"></i> View</a>
+					</td>
+                    
+				</tr>
+               {% endfor %}
+				<!-- Item #2 -->
+				{% comment %} <tr>
+					<td class="title-container">
+						<img src="{% static 'images/' %}listing-05.jpg" alt="">
+						<div class="title">
+							<h4><a href="#">Oak Tree Villas</a></h4>
+							<span>71 Lower River Dr. Bronx, NY</span>
+							<span class="table-property-price">$535,000</span>
+						</div>
+					</td>
+					<td class="expire-date">December 12, 2016</td>
+					<td class="action">
+						<a href="#"><i class="fa fa-pencil"></i> Edit</a>
+						<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>
+						<a href="#" class="delete"><i class="fa fa-remove"></i> Delete</a>
+					</td>
+				</tr> {% endcomment %}
+
+			</table>
+			<!-- Pagination Container -->
+			<div class="row fs-listings">
+				<div class="col-md-12">
+
+					<!-- Pagination -->
+					<div class="clearfix"></div>
+					<div class="pagination-container margin-top-10 margin-bottom-45">
+						<nav class="mt-4" aria-label="Page navigation sample">
+							{% if listingenquiry.has_other_pages %}
+							  <ul class="pagination">
+									{% if listingenquiry.has_previous %}
+								<li class="page-item"><a class="page-link" href="?page={{listingenquiry.previous_page_number}}">Previous</a></li>
+									{% else %}
+									<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+									{% endif %}
+						
+									{% for i in listingenquiry.paginator.page_range %}
+										{% if listingenquiry.number == i %}
+										<li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
+										{% else %}
+											<li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+										{% endif %}
+								{% endfor %}
+						
+									{% if listingenquiry.has_next %}
+									<li class="page-item"><a class="page-link" href="?page={{listingenquiry.next_page_number}}">Next</a></li>
+									{% else %}
+										<li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+									{% endif %}
+							  </ul>
+							{% endif %}
+						</nav>
+					</div>
+
+				</div>
+			</div>
+			<!-- Pagination Container / End -->
+		</div>
+
+	</div>
+</div>
+{% endblock %}

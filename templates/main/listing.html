@@ -1,0 +1,431 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %} | {{listing.configuration}} Flat, {{ listing.title}}, {{ listing.locality}} {% endblock %}
+{% load static %}
+{% block content %}
+{% load filters %}
+<!-- Titlebar
+================================================== -->
+<div id="titlebar" class="property-titlebar margin-bottom-0">
+	<div class="container">
+		<div class="row">
+			{% include 'includes/alerts.html' %}
+			<div class="col-md-12">
+				
+				<a href="{% url 'listings' %}" class="back-to-listings"></a>
+				<div class="property-title">
+					
+					<h2>{{listing.configuration}} Flat, {{ listing.title}}, {{ listing.locality}} 
+						{% if listing.listing_type == 'Buy' %}
+						<span class="property-badge">For Sale</span>
+						{% elif listing.listing_type == 'Rent' %}
+						<span class="property-badge">For Rent</span>
+						{% else %}
+						{% endif %}
+					</h2>
+					<span>
+						<a href="#location" class="listing-address">
+							<i class="fa fa-map-marker"></i>
+							{{ listing.locality}}, {{ listing.city }}, {{ listing.state }}, {{ listing.zipcode }}
+						</a>
+					</span>
+				</div>
+
+				<div class="property-pricing">
+					<div class="property-price">₹{{ listing.price |format_price |intcomma }}</div>
+					{% comment %} <div class="sub-price">$770 / sq ft</div> {% endcomment %}
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Content
+================================================== -->
+<div class="container">
+	
+</div>
+<div class="container">
+	<div class="row">
+
+		<!-- Property Description -->
+		<div class="col-lg-8 col-md-7 sp-content margin-bottom-50">
+			<div class="row margin-bottom-50">
+				<div class="col-md-12">
+				
+					<!-- Slider -->
+					<div class="property-slider default">
+						<a href="{{ listing.photo_main.url }}" data-background-image="{{ listing.photo_main.url }}" class="item mfp-gallery"></a>
+						{% for i in listing_gallery %}
+						<a href="{{ i.image.url }}" data-background-image="{{ i.image.url }}" class="item mfp-gallery"></a>
+						{% endfor %}
+						{% comment %} <a href="{% static 'images/' %}single-property-02.jpg" data-background-image="{% static 'images/' %}single-property-02.jpg" class="item mfp-gallery"></a> {% endcomment %}
+						
+					</div>
+		
+					<!-- Slider Thumbs -->
+					<div class="property-slider-nav">
+						<div class="item"><img src="{{ listing.photo_main.url }}" alt=""></div>
+						{% for i in listing_gallery %}
+						<div class="item"><img src="{{ i.image.url }}" alt=""></div>
+						{% endfor %}
+						{% comment %} <div class="item"><img src="{% static 'images/' %}single-property-02.jpg" alt=""></div> {% endcomment %}
+					</div>
+		
+				</div>
+			</div>
+			<div class="property-description">
+
+				<!-- Main Features -->
+				<ul class="property-main-features">
+					<li>Area <span>{{ listing.sqft }} Sqft</span></li>
+					<li>Parking <span>{{ listing.parking }}</span></li>
+					<li>Bedrooms <span>{{ listing.bedrooms }}</span></li>
+					<li>Bathrooms <span>{{ listing.bathrooms }}</span></li>
+					<li>Listing ID <span>{{ listing.id}}</span></li>
+				</ul>
+
+
+				<!-- Description -->
+				<h3 class="desc-headline">Description</h3>
+				<div class="show-more">
+					<p>
+						{{ listing.description|safe }}
+					</p>
+					<a href="#" class="show-more-button">Show More <i class="fa fa-angle-down"></i></a>
+				</div>
+
+				<!-- Details -->
+				<h3 class="desc-headline">Details</h3>
+				<ul class="property-features margin-top-0">
+					<li>Listing ID: <span>#{{ listing.id}}</span></li>
+					<li>Asking Price: <span>₹{{ listing.price |format_price |intcomma }}</span></li>
+					<li>Configuration: <span>{{ listing.configuration }}</span></li>
+					<li>Possession: <span>{{ listing.possession }}</span></li>
+					<li>Bedrooms: <span>{{ listing.bedrooms }}</span></li>
+					<li>Bathrooms: <span>{{ listing.bathrooms }}</span></li>
+					<li>Parking: <span>{{ listing.parking }}</span></li>
+					<li>Square Feet: <span>{{ listing.sqft }}</span></li>
+					<li>Lot Size: <span>{{ listing.lot_size }}</span></li>
+					<li>Floor: <span>{{ listing.floors }}</span></li>
+					<li>Sale Type: <span>{{ listing.sale_type }}</span></li>
+					<li>Developer: <span><a href="{{listing.developer.get_url}}">{{ listing.developer}}</a></span></li>
+					<li>Project: <span><a href="{{listing.project.get_url}}">{{ listing.project}}</a></span></li>
+					{% if listing.floor_plan_pdf %}
+					<li>Floor Plan PDF: <span><a href="{{listing.floor_plan_pdf.url}}"><i class="fa fa-file-pdf-o" style="color:red;"></i> View Now</a></span></li>
+					{% endif %}
+					<li>Date: <span>{{ listing.list_date|date:'d F, Y' }}</span></li>
+					
+				</ul>
+
+				<!-- Features -->
+				{% if amenities %}
+				<h3 class="desc-headline">Amenities</h3>
+				<ul class="property-features checkboxes margin-top-0">
+					{% for amenity in amenities %}
+					<li>{{amenity.name}}</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				<!-- Floorplans -->
+				{% if floorplans %}
+				<h3 class="desc-headline no-border">Floorplans</h3>
+				<!-- Accordion -->
+				<div class="style-1 fp-accordion">
+					<div class="accordion">
+						{% for floorplan in floorplans %}
+						<h3>{{floorplan.name}} <i class="fa fa-angle-down"></i> </h3>
+						<div>
+						{% if floorplan.photo %} 	
+						<a class="floor-pic mfp-image" href="{{floorplan.photo.url}}">
+							<img src="{{floorplan.photo.url}}" alt="">
+						</a>
+						{% else %}
+						<p>Not Fount Floor Plan</p>
+						{% endif %}
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+				{% endif %}
+
+				<!-- Video -->
+				{% if listing.youtube_video_code %}
+				<h3 class="desc-headline no-border">Video</h3>
+				<div class="responsive-iframe">
+					<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/{{listing.youtube_video_code}}?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+				</div>
+				{% endif %}
+
+				<!-- Similar Listings Container -->
+				{% if similar_properties %}
+				<h3 class="desc-headline no-border margin-bottom-35 margin-top-60">Similar Properties in {{ listing.city}}</h3>
+				<!-- Layout Switcher -->
+				<div class="layout-switcher hidden"><a href="#" class="list"><i class="fa fa-th-list"></i></a></div>
+				<div class="listings-container list-layout">
+					{% for listing in similar_properties %}
+					<!-- Listing Item -->
+					<div class="listing-item">
+
+						<a href="{{ listing.get_url }}" class="listing-img-container">
+
+							<div class="listing-badges">
+								<span class="featured">{{listing.listing_type}}</span>
+				                 <span>{{listing.configuration}} Flat</span>
+							</div>
+
+							<div class="listing-img-content">
+								<span class="listing-price">₹{{ listing.price |format_price |intcomma }}</span>
+							</div>
+                            {% if listing.photo_main %}
+							<img src="{{ listing.photo_main.url }}" alt="">
+							{% else %}
+							<img src="{% static 'images/listing-03.jpg' %}" alt="">
+							{% endif %}
+						</a>
+						
+						<div class="listing-content">
+
+							<div class="listing-title">
+								<h4><a href="{{ listing.get_url }}">{{listing.configuration}} Flat, {{ listing.title|truncatewords:10 }}, {{ listing.locality}}</a></h4>
+								{% comment %} <p class="listing-address popup-gmaps">
+									<i class="fa fa-map-marker" style="font-size:20px;color:red"></i>
+									{{ listing.locality}}, {{ listing.city }}, {{ listing.state }}, {{ listing.zipcode }}
+								</p> {% endcomment %}
+								<a href="{{ listing.get_url }}" class="details button border">Details</a>
+							</div>
+
+							<ul class="listing-details">
+								<li><i class="fa fa-th-large" style="color:red"></i> Sqft: {{ listing.sqft }}</li>
+    							<li><i class="fa fa-car" style="color:red"></i> Parking: {{ listing.parking }}</li>
+    							<li><i class="fa fa-bed" style="color:red"></i> Bedrooms: {{ listing.bedrooms }}</li>
+    							<li><i class="fa fa-bath" style="color:red"></i> Bathrooms: {{ listing.bathrooms }}</li>
+							</ul>
+
+							<div class="listing-footer">
+								<a href="#"><i class="fa fa-user" style="color:red"></i> {{ listing.realtor }}</a>
+							    <span><i class="fa fa-calendar-o" style="color:red"></i> {{ listing.created_on |naturaltime }}</span>
+							</div>
+
+						</div>
+						<!-- Listing Item / End -->
+
+					</div>
+					<!-- Listing Item / End -->
+                   {% endfor %}
+
+				</div>
+				{% endif %}
+				<!-- Similar Listings Container / End -->
+
+			</div>
+		</div>
+		<!-- Property Description / End -->
+
+
+		<!-- Sidebar -->
+		<div class="col-lg-4 col-md-5 sp-sidebar">
+			<div class="sidebar sticky right">
+				<!-- Widget -->
+				<div class="widget">
+
+					<!-- Agent Widget -->
+					<div class="agent-widget">
+						<h3 class="margin-bottom-4">Property Realtor</h3>
+						<div class="agent-title">
+							<div class="agent-photo">
+								{% if listing.realtor.photo %}
+								<img src="{{ listing.realtor.photo.url }}" alt="" />
+								{% else %}
+								{% endif %}
+							</div>
+							<div class="agent-details">
+								<h4><a href="{{listing.realtor.get_url}}">{{ listing.realtor }}</a></h4>
+								<span><i class="sl sl-icon-call-in"></i>{{ listing.realtor.phone}}</span>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<button class="button fullwidth margin-top-5" onclick="openEnquiryModal()">Enquire Now</button>
+						<form method="POST" enctype="multipart/form-data">
+						{% csrf_token %}
+						<div class="request-form">
+					    {% if user.is_authenticated %}
+							<input type="hidden" name="user_id" value="{{user.id}}" class="form-control">
+						{% else %}
+							<input type="hidden" name="user_id" value="0" class="form-control">
+					     {% endif %}
+						 <div class="form-group col-md-12">
+							<input type="hidden" name="listing_url" value="{{listing.slug}}">
+							<input type="hidden" name="listing_name" class="form-control" value="{{listing.title}}" readonly>
+						</div>
+						<div class="form-group col-md-12">
+							{{ form.full_name}}
+						</div>	
+						<div class="form-group col-md-12">
+							{{ form.email}}
+						</div>
+						<div class="form-group col-md-12">
+							{{ form.phone_no }}
+						</div>
+						<div class="form-group col-md-12">
+							{{ form.city}}
+						</div>
+						<div class="form-group col-md-12">
+						  <textarea name="requirement" class="form-control"  rows="4" placeholder="Enter your requirement details"></textarea>
+						</div>
+						<button type="submit" class="button fullwidth margin-top-5">Send Message</button>
+						</div>
+					</form>
+					</div>
+					<!-- Agent Widget / End -->
+
+				</div>
+				<!-- Widget / End -->
+
+
+				<!-- Widget -->
+				<div class="widget">
+					<h3 class="margin-bottom-30 margin-top-30">Mortgage Calculator</h3>
+					
+					<!-- Mortgage Calculator -->
+					<form action="javascript:void(0);" autocomplete="off" class="mortgageCalc" data-calc-currency="USD">
+						<div class="calc-input">
+							<div class="pick-price tip" data-tip-content="Set This Property Price"></div>
+						    <input type="text" id="amount" name="amount" placeholder="Sale Price" required>
+						    <label for="amount" class="fa fa-rupee"></label>
+						</div>
+
+						<div class="calc-input">
+						    <input type="text" id="downpayment" placeholder="Down Payment">
+						    <label for="downpayment" class="fa fa-rupee"></label>
+						</div>
+
+						<div class="calc-input">
+							<input type="text" id="years" placeholder="Loan Term (Years)" required>
+							<label for="years" class="fa fa-calendar-o"></label>
+						</div>
+
+						<div class="calc-input">
+							<input type="text" id="interest" placeholder="Interest Rate" required>
+							<label for="interest" class="fa fa-percent"></label>
+						</div>
+
+						<button class="button calc-button" formvalidate>Calculate</button>
+						<div class="calc-output-container"><div class="notification success">Monthly Payment: <strong class="calc-output"></strong></div></div>
+					</form>
+					<!-- Mortgage Calculator / End -->
+
+				</div>
+				<!-- Widget / End -->
+
+
+				<!-- Widget -->
+				{% if featuredlist %}
+				<div class="widget">
+					<h3 class="margin-bottom-35">Featured Properties</h3>
+
+					<div class="listing-carousel outer">
+						{% for listing in featuredlist %}
+						<!-- Item -->
+						<div class="item">
+							<div class="listing-item compact">
+
+								<a href="{{ listing.get_url }}" class="listing-img-container">
+
+									<div class="listing-badges">
+										<span class="featured">{{listing.listing_type}}</span>
+				                         <span>{{listing.configuration}} Flat</span>
+									</div>
+
+									<div class="listing-img-content">
+										<span class="listing-compact-title">{{ listing.title|truncatewords:10 }} <i>₹{{ listing.price |format_price |intcomma }}</i></span>
+
+										<ul class="listing-hidden-content">
+											<li>Area <span>{{ listing.sqft }} Sqft</span></li>
+											<li>Bedrooms <span>{{ listing.bedrooms }}</span></li>
+											<li>Bathrooms <span>{{ listing.bathrooms }}</span></li>
+										</ul>
+									</div>
+									{% if listing.photo_main %}
+									<img src="{{ listing.photo_main.url }}" alt="">
+									{% else %}
+									<img src="{% static 'images/listing-01.jpg' %}" alt="">
+									{% endif %}
+								</a>
+
+							</div>
+						</div>
+						<!-- Item / End -->
+						{% endfor %}
+					</div>
+
+				</div>
+				{% endif %}
+				<!-- Widget / End -->
+
+			</div>
+		</div>
+		<!-- Sidebar / End -->
+
+	</div>
+</div>
+
+
+<div class="sticky-enquiry">
+	<button class="enquiry-button" onclick="openEnquiryModal()">Enquire Now</button>
+  </div>
+  <!-- Enquiry Modal -->
+  <div id="enquiryModal" class="enquiry-modal">
+	<div class="modal-content">
+	  <span class="close-modal site-button button-sm" onclick="closeEnquiryModal()">&times;</span>
+	  <!-- Enquiry form goes here -->
+		<form  method="POST" class="inquiry-form wow box-shadow bg-white fadeInUp" enctype="multipart/form-data">
+		  {% csrf_token %}
+		  <h4 class="font-weight-300 m-t0 m-b10">TELL US WHAT YOU NEED<span class="bg-primary"></span></h4>
+		  <div class="row">
+			<div class="request-form">
+				{% if user.is_authenticated %}
+					<input type="hidden" name="user_id" value="{{user.id}}" class="form-control">
+				{% else %}
+					<input type="hidden" name="user_id" value="0" class="form-control">
+				 {% endif %}
+				 <div class="form-group col-md-12">
+					<input type="hidden" name="listing_url" value="{{listing.slug}}">
+					<input type="hidden" name="listing_name" class="form-control" value="{{listing.title}}" readonly>
+			    </div>
+			<div class="col-lg-6 col-md-6">
+			  <div class="form-group">
+					{{ form.full_name}}
+			  </div>
+			</div>
+			<div class="col-lg-6 col-md-6">
+			  <div class="form-group">
+					{{ form.phone_no }}
+			  </div>
+			</div>
+			<div class="col-lg-12 col-md-12">
+			  <div class="form-group">
+				{{ form.email}}
+			  </div>
+			</div>
+			<div class="col-lg-12 col-md-12">
+			  <div class="form-group">
+				{{ form.city}}
+			  </div>
+			</div>
+			<div class="col-lg-12 col-md-12">
+			  <div class="form-group">
+				<textarea name="requirement" class="form-control"  rows="4" placeholder="Enter your requirement details"></textarea>
+			  </div>
+			</div>
+			<div class="col-lg-12 col-md-12">
+			  <button type="submit" class="button button-md"> <span>Submit Now</span> </button>
+			</div>
+		   </div>
+		  </div>
+		</form>	
+		{% comment %} <button type="button" class="button fullwidth margin-top-5 button-sm" onclick="closeEnquiryModal()">Close</button> {% endcomment %}
+	</div>
+  </div>
+{% endblock %}
